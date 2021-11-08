@@ -1,0 +1,356 @@
+﻿@model mycontactsEntities
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="app">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Lookup</h5>
+
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="Search" v-model="search">
+                        </div>
+
+                        <div class="col-sm-3" style="float: right;">
+                            <button type="submit" class="btn btn-primary" style="float: right;" @@click="addNewDialog">Add New</button>
+                        </div>
+
+                        <!-- Table with stripped rows -->
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Fax</th>
+                                    <th scope="col">eMail</th>
+                                    <th scope="col">Last Update</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                <tr v-for="item in data">
+                                    <th scope="row">{{item.Name}}</th>
+                                    <td>{{item.Phone}}</td>
+                                    <td>{{item.Fax}}</td>
+                                    <td>{{item.eMail}}</td>
+                                    <td>{{item.LastUpdateDate}} </td>
+                                    <td>
+
+                                        <a href="#" @@click="dialogEdit(item)">Edit</a>
+
+                                    </td>
+                                </tr>
+
+
+
+                            </tbody>
+                        </table>
+
+
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button @@click="dialogClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" v-if="formType == 1">Add New</h4>
+                    <h4 class="modal-title" v-else>Edit</h4>
+                </div>
+
+               
+
+                        <form>
+                            <div class="row m-3">
+                                <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="selected.Name">
+                                </div>
+                            </div>
+                            <div class="row m-3">
+                                <label for="inputEmail" class="col-sm-2 col-form-label">Phone</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="selected.Phone">
+                                </div>
+                            </div>
+                            <div class="row m-3">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Fax</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="selected.Fax">
+                                </div>
+                            </div>
+                            <div class="row m-3">
+                                <label for="inputNumber" class="col-sm-2 col-form-label">eMail</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" v-model="selected.eMail">
+                                </div>
+                            </div>
+                            <div class="row m-3">
+                                <label for="inputNumber" class="col-sm-2 col-form-label">Notes</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="selected.Notes">
+                                </div>
+                            </div>
+
+
+
+                        </form>
+
+
+
+
+
+
+                        <div class="modal-footer">
+                            <button v-if="formValidation.valid && formType == 2" type="button" class="btn btn-default" data-dismiss="modal" @@click="edit">Save</button>
+                            <button v-if="formValidation.valid && formType == 1" type="button" class="btn btn-default" data-dismiss="modal" @@click="add">Add</button>
+                            <span v-if="!formValidation.valid">{{formValidation.message}}</span>
+                        </div>
+
+                    
+                    </div>
+
+                </div>
+            </div>
+       
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+
+
+    var vue = new Vue({
+        el: '#app',
+
+        data: () => ({
+            data: [],
+            search: '',
+            selected: [],
+            formType: 1,
+        }),
+        methods: {
+
+            getContacts() {
+
+                fetch('/Contact/GetAll?search=' + this.search)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.data = data.data;
+
+
+                    }).catch(err => {
+                        console.error('Error: ', err);
+                    });
+
+            },
+
+            dialogEdit(obj) {
+
+                this.formType = 2;
+                this.selected = obj;
+                $('#myModal').modal('show');
+
+
+            },
+            dialogClose() {
+
+                $('#myModal').modal('hide');
+
+            },
+
+            addNewDialog() {
+                this.formType = 1;
+                this.selected = {
+                    Name: '',
+                    Phone: '',
+                    Fax: '',
+                    eMail: '',
+                    Notes: '',
+                };
+                $('#myModal').modal('show');
+
+            },
+
+            add() {
+
+
+                fetch("/Contact/Create", {
+                    method: "POST",
+                    credentials: 'include',
+                    mode: 'cors',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Pragma: 'no-cache',
+                    },
+                    body: JSON.stringify({
+                        // your expected POST request payload goes here
+                        contactID: this.selected.contactID,
+                        Name: this.selected.Name,
+                        Phone: this.selected.Phone,
+                        Fax: this.selected.Fax,
+                        eMail: this.selected.eMail,
+                        Notes: this.selected.Notes,
+
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+
+                        if (data) {
+                            this.getContacts();
+                            this.dialogClose();
+                        }
+
+                    }).catch(err => {
+                        console.error('Error: ', err);
+                    });
+
+
+
+            },
+
+            edit() {
+
+
+                fetch("/Contact/Edit", {
+                    method: "POST",
+                    credentials: 'include',
+                    mode: 'cors',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Pragma: 'no-cache',
+                    },
+                    body: JSON.stringify({
+                        // your expected POST request payload goes here
+                        contactID: this.selected.contactID,
+                        Name: this.selected.Name,
+                        Phone: this.selected.Phone,
+                        Fax: this.selected.Fax,
+                        eMail: this.selected.eMail,
+                        Notes: this.selected.Notes,
+
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+
+                        if (data) {
+                            this.getContacts();
+                            this.dialogClose();
+                        }
+                        
+                    }).catch(err => {
+                        console.error('Error: ', err);
+                    });
+
+
+
+            },
+
+            
+
+
+
+
+
+
+        },
+        computed: {
+
+            formValidation() {
+
+                if (this.selected.length == 0) {
+                    return { valid: false, message: "" }
+                }
+
+                if (this.selected.Name == "") {
+                    return { valid: false, message: "Name is empty" }
+                }
+
+                if (this.selected.Name.length > 50) {
+                    return { valid: false, message: "Name must be less than 50 characters" }
+                }
+
+
+                if (this.selected.Phone == "") {
+                    return { valid: false, message: "Phone is empty" }
+                }
+
+                if (this.selected.Fax == "") {
+                    return { valid: false, message: "Fax is empty" }
+                }
+
+                if (this.selected.eMail == "") {
+                    return { valid: false, message: "Email is empty" }
+                }
+
+                let reg = /^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if (!reg.test(this.selected.eMail)) {
+                    return { valid: false, message: "Invalid Email" }
+                }
+
+
+                if (this.selected.Notes == "") {
+                    return { valid: false, message: "Notes is empty" }
+                }
+
+                return { valid: true }
+            },
+
+        },
+
+        watch: {
+            search() {
+                this.getContacts();
+            }
+        },
+
+        created() {
+
+            this.getContacts();
+
+        }
+    });
+</script>
+
+
+

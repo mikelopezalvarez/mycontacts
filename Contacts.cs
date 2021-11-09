@@ -21,6 +21,6 @@ namespace MyContacts
         public string eMail { get; set; }
         public string Notes { get; set; }
         public Nullable<System.DateTime> LastUpdateDate { get; set; }
-        public string LastUpdateUserName { get; set; }
+        public string LastUpdateUser { get; set; }
     }
 }

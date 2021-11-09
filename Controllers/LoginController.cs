@@ -22,7 +22,7 @@ namespace MyContacts.Controllers
         {
             try
             {
-                using (var db = new mycontactsEntities())
+                using (var db = new MyContacts_dbEntities())
                 {
                     var getUser = db.Users.Where(x => x.UserName.Equals(model.UserName)).FirstOrDefault();
 

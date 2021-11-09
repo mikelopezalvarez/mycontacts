@@ -72,7 +72,6 @@ C:\Users\mlope\source\repos\MyContacts\bin\System.Web.WebPages.Razor.xml
 C:\Users\mlope\source\repos\MyContacts\bin\Newtonsoft.Json.xml
 C:\Users\mlope\source\repos\MyContacts\bin\Antlr3.Runtime.pdb
 C:\Users\mlope\source\repos\MyContacts\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\mlope\source\repos\MyContacts\obj\Debug\MyContacts.csproj.AssemblyReference.cache
 C:\Users\mlope\source\repos\MyContacts\obj\Debug\MyContacts.csproj.CoreCompileInputs.cache
 C:\Users\mlope\source\repos\MyContacts\obj\Debug\MyContacts.csproj.CopyComplete
 C:\Users\mlope\source\repos\MyContacts\obj\Debug\MyContacts.dll
@@ -81,3 +80,4 @@ C:\Users\mlope\source\repos\MyContacts\bin\EntityFramework.dll
 C:\Users\mlope\source\repos\MyContacts\bin\EntityFramework.SqlServer.dll
 C:\Users\mlope\source\repos\MyContacts\bin\EntityFramework.xml
 C:\Users\mlope\source\repos\MyContacts\bin\EntityFramework.SqlServer.xml
+C:\Users\mlope\source\repos\MyContacts\obj\Debug\MyContacts.csproj.AssemblyReference.cache

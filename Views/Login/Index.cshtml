@@ -4,85 +4,143 @@
     Layout = "~/Views/Shared/_LayoutNoHeader.cshtml";
 }
 
-<div class="container">
+<div id="app">
+    <div class="container">
 
-    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-                    <div class="d-flex justify-content-center py-4">
-                        <a href="index.html" class="logo d-flex align-items-center w-auto">
-                            <img src="assets/img/logo.png" alt="">
-                            <span class="d-none d-lg-block">MyContacts 1.0v</span>
-                        </a>
-                    </div><!-- End Logo -->
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <img src="assets/img/logo.png" alt="">
+                                <span class="d-none d-lg-block">MyContacts 1.0v</span>
+                            </a>
+                        </div><!-- End Logo -->
 
-                    <div class="card mb-3">
+                        <div class="card mb-3">
 
-                        <div class="card-body">
+                            <div class="card-body">
 
-                            <div class="pt-4 pb-2">
-                                <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                                <p class="text-center small">Enter your username & password to login</p>
-                            </div>
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                                    <p class="text-center small">Enter your username & password to login</p>
+                                </div>
 
-                            @using (Html.BeginForm("", "", FormMethod.Post, new { id = "formID", @class = "row g-3 needs-validation" }))
-                            {
+
                                 <div class="col-12">
                                     <label for="yourUsername" class="form-label">User Name</label>
                                     <div class="input-group has-validation">
-                                        @Html.TextBoxFor(x => x.UserName, new { id = "yourUsername", @class = "form-control" })
-                                        <div class="invalid-feedback">Please enter your User Name.</div>
+                                        <input type="text" class="form-control" v-model="username">
+
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <input id="btnlogin" class="btn btn-primary w-100" type="submit" value="Enter">
+                                    <button v-if="loading != true && username != '' && username.length > 4" class="btn btn-primary w-100 mt-3" @@click="login" @@keyup.enter="login">Enter</button>
+                                    <button v-else class="btn btn-primary w-100 mt-3 disabled" @@click="login" @@keyup.enter="login">Enter</button>
                                 </div>
-                            }
+                                <div class="col-12 mt-2">
+                                    <p style="color:red;">{{errMessage}}</p>
+                                </div>
 
+
+                                
+
+
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="credits">
-                        <!-- All the links in the footer should remain intact. -->
-                        <!-- You can delete the links only if you purchased the pro version. -->
-                        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-                    </div>
+                        <div class="credits">
+                            <!-- All the links in the footer should remain intact. -->
+                            <!-- You can delete the links only if you purchased the pro version. -->
+                            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+                            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                        </div>
 
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </section>
+        </section>
 
+    </div>
 </div>
-<script>
-    $(document).ready(function () {
 
-        $("#btnlogin").click(function () {
-            $.ajax({
-                type: 'post',
-                data: $('#formID').serialize(),
-                url: '/Login/Index',
-                beforeSend: function () {
-                    if (!$('#formID').valid()) {
-                        alert('COMPLETE ALL FIELDS');
-                        return false;
-                    }
-                    //Incluir loading
-                    return true;
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+
+        //const moment = moment();
+
+        var vue = new Vue({
+            el: '#app',
+
+            data: () => ({
+                username: 'Miguel',
+                errMessage: '',
+                loading: false,
+            }),
+            methods: {
+
+
+                login() {
+
+                    this.loading = true;
+
+                    fetch("/Login/Index", {
+                        method: "POST",
+                        credentials: 'include',
+                        mode: 'cors',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            Pragma: 'no-cache',
+                        },
+                        body: JSON.stringify({
+                            UserName: this.username,
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+
+                            
+
+                            if (data.passed) {
+
+                                location.href = "/Contact/Index";
+
+                            } else {
+
+                                this.errMessage = data.ex;
+                                this.loading = false;
+
+                            }
+
+                        }).catch(err => {
+                            console.error('Error: ', err);
+                        });
+
+
+
                 },
-                success: function (response) {
-                    if (response.passed == true) {
-                        window.location.href = response.url;
-                    } else {
-                        alert(response.ex);
-                    }
+
+
+
+            },
+            watch: {
+
+                username() {
+                    this.errMessage = '';
                 }
-            });
+
+            },
+            computed: {},
+            created() {}
         });
-    });
-</script>
+    </script>
+
+
+

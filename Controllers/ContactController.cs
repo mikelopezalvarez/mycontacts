@@ -27,10 +27,10 @@ namespace MyContacts.Controllers
 
         public ActionResult GetAll(string search)
         {
-            using (var db = new mycontactsEntities())
+            using (var db = new MyContacts_dbEntities())
             {
 
-                var contacts = from g in db.Contacts where g.Name.Contains(search) || g.eMail.Contains(search) select g;
+                var contacts = from g in db.Contacts where g.Name.Contains(search) || g.eMail.Contains(search) || g.Phone.Contains(search) || g.Fax.Contains(search) select g;
 
                 return Json(new { data = contacts.ToList() }, JsonRequestBehavior.AllowGet);
 
@@ -39,7 +39,7 @@ namespace MyContacts.Controllers
 
         public ActionResult GetDetail(int id)
         {
-            using (var db = new mycontactsEntities())
+            using (var db = new MyContacts_dbEntities())
             {
                 Contacts contacts = db.Contacts.Find(id);
 
@@ -59,11 +59,11 @@ namespace MyContacts.Controllers
         
 
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Name,Phone,Fax,eMail,Notes")] Contacts contacts)
+        public ActionResult Create([Bind(Include = "Name,Phone,Fax,eMail,Notes,LastUpdateDate")] Contacts contacts)
         {
             if (ModelState.IsValid)
             {
-                using (var db = new mycontactsEntities())
+                using (var db = new MyContacts_dbEntities())
                 {
                     db.Contacts.Add(contacts);
                     db.SaveChanges();
@@ -76,11 +76,11 @@ namespace MyContacts.Controllers
  
 
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "contactID,Name,Phone,Fax,eMail,Notes")] Contacts contacts)
+        public ActionResult Edit([Bind(Include = "contactID,Name,Phone,Fax,eMail,Notes,LastUpdateDate")] Contacts contacts)
         {
             if (ModelState.IsValid)
             {
-                using (var db = new mycontactsEntities())
+                using (var db = new MyContacts_dbEntities())
                 {
                     db.Entry(contacts).State = EntityState.Modified;
                     db.SaveChanges();

@@ -4,23 +4,23 @@
     <EntitySetMapping Name="Contacts">
       <EntityTypeMapping TypeName="mycontactsModel.Contacts">
         <MappingFragment StoreEntitySet="Contacts">
-          <ScalarProperty Name="contactID" ColumnName="contactID" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Phone" ColumnName="Phone" />
-          <ScalarProperty Name="Fax" ColumnName="Fax" />
-          <ScalarProperty Name="eMail" ColumnName="eMail" />
-          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="LastUpdateUser" ColumnName="LastUpdateUser" />
           <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
-          <ScalarProperty Name="LastUpdateUserName" ColumnName="LastUpdateUserName" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="eMail" ColumnName="eMail" />
+          <ScalarProperty Name="Fax" ColumnName="Fax" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="contactID" ColumnName="contactID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="mycontactsModel.Users">
         <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="userID" ColumnName="userID" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
           <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="userID" ColumnName="userID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

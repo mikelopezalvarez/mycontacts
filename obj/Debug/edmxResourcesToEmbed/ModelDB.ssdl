@@ -10,8 +10,8 @@
     <Property Name="Fax" Type="varchar" MaxLength="10" />
     <Property Name="eMail" Type="varchar" MaxLength="50" />
     <Property Name="Notes" Type="ntext" />
-    <Property Name="LastUpdateDate" Type="datetime" />
-    <Property Name="LastUpdateUserName" Type="varchar" MaxLength="20" />
+    <Property Name="LastUpdateDate" Type="datetime" Nullable="false" />
+    <Property Name="LastUpdateUser" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Users">
     <Key>

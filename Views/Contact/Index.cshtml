@@ -1,4 +1,4 @@
-﻿@model mycontactsEntities
+﻿@model MyContacts_dbEntities
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -39,10 +39,10 @@
 
                                 <tr v-for="item in data">
                                     <th scope="row">{{item.Name}}</th>
-                                    <td>{{item.Phone}}</td>
-                                    <td>{{item.Fax}}</td>
-                                    <td>{{item.eMail}}</td>
-                                    <td>{{item.LastUpdateDate}} </td>
+                                    <td><a :href="`tel:${item.Phone}`">{{formatPhoneNumber(item.Phone)}}</a></td>
+                                    <td><a :href="`tel:${item.Fax}`">{{formatPhoneNumber(item.Fax)}}</a></td>
+                                    <td><a :href="`mailto:${item.eMail}`">{{item.eMail}}</a></td>
+                                    <td>{{formatDate(item.LastUpdateDate)}} </td>
                                     <td>
 
                                         <a href="#" @@click="dialogEdit(item)">Edit</a>
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                             <div class="row m-3">
-                                <label for="inputEmail" class="col-sm-2 col-form-label">Phone</label>
+                                <label for="inputPhone" class="col-sm-2 col-form-label">Phone</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" v-model="selected.Phone">
                                 </div>
@@ -153,8 +153,10 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
 
+    //const moment = moment();
 
     var vue = new Vue({
         el: '#app',
@@ -228,6 +230,7 @@
                         Fax: this.selected.Fax,
                         eMail: this.selected.eMail,
                         Notes: this.selected.Notes,
+                        LastUpdateDate: moment().format('YYYY-MM-DD HH:m:s'),
 
                     })
                 })
@@ -267,6 +270,7 @@
                         Fax: this.selected.Fax,
                         eMail: this.selected.eMail,
                         Notes: this.selected.Notes,
+                        LastUpdateDate: moment().format('YYYY-MM-DD HH:m:s'),
 
                     })
                 })
@@ -286,6 +290,24 @@
 
             },
 
+            formatPhoneNumber(phone){
+                //Filter only numbers from the input
+                let cleaned = ('' + phone).replace(/\D/g, '');
+
+                //Check if the input is of correct length
+                let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+
+                if (match) {
+                    return '(' + match[1] + ') ' + match[2] + '-' + match[3]
+                };
+
+                return null
+            },
+
+            
+            formatDate(dt) {
+                return moment(dt).format('YYYY-MM-DD HH:m:s');
+            },
             
 
 
@@ -315,8 +337,17 @@
                     return { valid: false, message: "Phone is empty" }
                 }
 
+                if (this.selected.Phone.length != 10) {
+                    return { valid: false, message: "Invalid Phone Number" }
+                }
+
+
                 if (this.selected.Fax == "") {
                     return { valid: false, message: "Fax is empty" }
+                }
+
+                if (this.selected.Fax.length != 10) {
+                    return { valid: false, message: "Invalid Fax Number" }
                 }
 
                 if (this.selected.eMail == "") {
